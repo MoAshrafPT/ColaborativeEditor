@@ -1,0 +1,283 @@
+@keyframes fadeIn{
+    from{
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to{
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.wrapper {
+    background: linear-gradient(328deg, #ffffff, #0f0f0f);
+    background-size: 400% 400%;
+
+    -webkit-animation: AnimationName 33s ease infinite;
+    -moz-animation: AnimationName 33s ease infinite;
+    animation: AnimationName 33s ease infinite;
+}
+
+.background-div{
+    width: 100%;
+    max-width: 500px;
+    padding: 10px;
+    background-color: #868686e2;
+    border-radius: 25px;
+    box-shadow: 10px 10px 10px rgba(96, 96, 96, 0.505);
+    /* transform: skew(-7deg); */
+}
+
+@-webkit-keyframes AnimationName {
+    0%{background-position:20% 0%}
+    50%{background-position:81% 100%}
+    100%{background-position:20% 0%}
+}
+@-moz-keyframes AnimationName {
+    0%{background-position:20% 0%}
+    50%{background-position:81% 100%}
+    100%{background-position:20% 0%}
+}
+@keyframes AnimationName {
+    0%{background-position:20% 0%}
+    50%{background-position:81% 100%}
+    100%{background-position:20% 0%}
+}
+
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body{
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.wrapper{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: #f5f5f5;
+    animation: fadeIn 0.5s ease-in-out;
+    
+}
+.login-form{
+    width: 100%;
+    max-width: 500px;
+    padding: 20px;
+    background-color: #ffffffe2;
+    border-radius: 25px;
+    box-shadow: 10px 10px 10px rgba(96, 96, 96, 0.505);
+    /* transform: skew(8deg); */
+}
+.login-form h2{
+    /* transform: skew(-4deg); */
+    text-align: center;
+    margin-bottom: 20px;
+}
+.login-form .input-field{
+    /* transform: skew(-4deg); */
+    position: relative;
+    width: 100%;
+    height: 50px;
+    margin: 30px 0;
+}
+/* .input-field input{
+    width: 100%;
+    height: 100%;
+    padding: 0 30px 0 10px;
+    background-color: #f5f5f5;
+    border: 1px solid #ccc;
+    border-radius: 7px;
+    outline: none;
+    font-size: 18px;
+    transition: 0.3s;
+} */
+.icon{
+    position: absolute;
+    top: 50%;
+    right: 5px;
+    transform: translateY(-50%);
+    font-size: 20px;
+    color: #999;
+    transition: 0.3s;
+}
+/* .input-field input:focus{
+    border-color: #49a7ff;
+} */
+
+.placeholder-label{
+    position: absolute;
+    top: 50%;
+    left: 10px;
+    transform: translateY(-50%);
+    color: #999;
+    font-size: 18px;
+    pointer-events: none;
+    transition: 0.3s;
+}
+
+/* .input-field input:focus + .placeholder-label{
+    top: 0;
+    transform: translateY(-90%);
+    font-size: 14px;
+    color: #49a7ff;
+
+}
+.input-field input.has-value + .placeholder-label {
+    position: absolute;
+    top: 0;
+    transform: translateY(-90%);
+    font-size: 14px;
+    color: #000000;
+  } */
+
+.remember-forgot{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 70px;
+    margin-bottom: 30px;
+    /* transform: skew(-4deg) */
+}
+
+.remember-forgot label input{
+    margin-right: 5px;
+    accent-color: #000000;
+    
+}
+
+.remember-forgot a ,.register-link a{
+    display: inline-block;
+    position: relative;
+    color: #000000;
+    text-decoration: none;
+}
+.remember-forgot a::after ,.register-link a::after{
+    content: '';
+    position: absolute;
+    width: 100%;
+    transform: scaleX(0);
+    height: 2px;
+    bottom: 0;
+    left: 0;
+    background-color: #000000;
+    transform-origin: bottom right;
+    transition: transform 0.25s ease-out;
+}
+
+.remember-forgot a:hover::after ,.register-link a:hover::after{
+    transform: scaleX(1);
+    transform-origin: bottom left;
+}
+
+
+.custom-checkbox {
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+    font-size: 16px;
+    color: #333;
+    transition: color 0.3s;
+  }
+  
+  .custom-checkbox input[type="checkbox"] {
+    display: none;
+  }
+  
+  .custom-checkbox .checkmark {
+    width: 24px;
+    height: 24px;
+    border: 2px solid #333;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 10px;
+    transition: background-color 0.3s, border-color 0.3s, transform 0.3s;
+    transform-style: preserve-3d;
+  }
+  
+  .custom-checkbox .checkmark::before {
+    content: "\2713";
+    font-size: 16px;
+    color: transparent;
+    transition: color 0.3s, transform 0.3s;
+  }
+  
+  .custom-checkbox input[type="checkbox"]:checked + .checkmark {
+    background-color: #333;
+    border-color: #333;
+    transform: scale(1.1) rotateZ(360deg) rotateY(360deg);
+  }
+  
+  .custom-checkbox input[type="checkbox"]:checked + .checkmark::before {
+    color: #fff;
+  }
+  
+  .custom-checkbox:hover {
+    color: #666;
+  }
+  
+  .custom-checkbox:hover .checkmark {
+    border-color: #666;
+    background-color: #f0f0f0;
+    transform: scale(1.05);
+  }
+  
+  .custom-checkbox input[type="checkbox"]:focus + .checkmark {
+    box-shadow: 0 0 3px 2px rgba(0, 0, 0, 0.2);
+    outline: none;
+  }
+  
+  .custom-checkbox .checkmark,
+  .custom-checkbox input[type="checkbox"]:checked + .checkmark {
+    transition: background-color 1.3s, border-color 1.3s, color 1.3s, transform 0.3s;
+  }
+
+  .captcha > *{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 30px;
+    border-radius: 25px;
+    /* transform: skew(-4deg) */
+  }
+  .facebook{
+    background-color: #0058ab !important;
+  }
+  .facebook:hover{
+    background-color: #00408a !important;
+  }
+  .google{
+    background-color: #db4437 !important;
+  }
+  .google:hover{
+    background-color: #b92f1f !important;
+  }
+
+  .social-icon{
+    font-size: 20px;
+    color: #fff;
+    margin-right: 10px;
+    transform: translateY(-1px);
+  }
+  .error{
+    transform: translateY(-10px);
+    color: red;
+    font-size: 14px;
+    margin-top: 10px;
+    text-align: right;}
+
+ .error-outline{
+    border-color: #b92f1f !important;
+ }
+ 
+ .error-outline ~ .icon{
+    color: #b92f1f !important;
+ }
