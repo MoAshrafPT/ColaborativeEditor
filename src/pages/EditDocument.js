@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Editor } from "react-draft-wysiwyg";
+import TextEditor from "../components/TextEditor";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { EditorState } from "draft-js";
 import EditNavbar from "../components/EditNavbar";
@@ -16,13 +16,7 @@ export default function EditDocument() {
     return (
         <>
             <EditNavbar />
-            <Editor
-                editorState={editorState}
-                toolbarClassName="toolbarClassName"
-                wrapperClassName="wrapperClassName"
-                editorClassName="editorClassName"
-                onEditorStateChange={onEditorStateChange}
-            />
+            <TextEditor/>
         </>
     );
 }
