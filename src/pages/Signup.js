@@ -6,8 +6,13 @@ import { MdAlternateEmail } from "react-icons/md";
 import { TextField, Button } from "@mui/material";
 import { FiLogIn } from "react-icons/fi";
 import ReCAPTCHA from "react-google-recaptcha";
-
+import axios from 'axios';
+import Login from './Login';
+import Alert from '@mui/lab/Alert';
 function Signup() {
+
+  const [showSuccessMessage, setShowSuccessMessage] = React.useState(false);
+  const [isSignedUp, setIsSignedUp] = React.useState(false);
   const [errors, setErrors] = React.useState({});
   const [username, setUsername] = React.useState("");
   const [password, setPassword] = React.useState("");
@@ -35,9 +40,28 @@ function Signup() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    axios.post('http://localhost:8080/auth/signup', {
+      username: username,
+      password: password,
+      email: email
+      //captcha: captcha
+    })
+    .then(response => {
+      // Handle the response here
+      console.log(response.data);
+
+      
+      setIsSignedUp(true);
+    
+    })
+    .catch(error => {
+      console.error('Error:', error);
+    });
   };
   
   return (
+    isSignedUp ? <Login /> :
     <div className="wrapper">
       <div className="background-div">
         <form className="login-form" onSubmit={handleSubmit}>
