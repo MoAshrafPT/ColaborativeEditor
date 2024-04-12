@@ -45,6 +45,10 @@ function Login() {
     },config)
     .then((response) => {
       Cookies.set('token', response.data.token);
+      localStorage.setItem('username', response.data.user.username);
+      localStorage.setItem('email', response.data.user.email);
+      localStorage.setItem('userID', response.data.user.userID);
+      localStorage.setItem("files", JSON.stringify(response.data.user.files));
       setIsLoggedIn(true);
     }).catch((error) => {
       console.log(error);

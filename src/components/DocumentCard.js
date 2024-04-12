@@ -8,9 +8,7 @@ export default function DocumentCard(props) {
     <>
       <div
         className="card"
-        onClick={() => {
-          navigate("/edit");
-        }}
+        onClick={props.onClick}
       >
         <div
           className="card-body"

@@ -6,8 +6,12 @@ import SubjectIcon from "@mui/icons-material/Subject";
 import Pagination from "@mui/material/Pagination";
 import { useState } from "react";
 import { myDocs } from "../mocks/data/files";
+import { Redirect } from "react-router-dom";
+import Cookies from "js-cookie";
+import { useNavigate } from "react-router-dom";
 
 export default function AllFiles() {
+  const navigate = useNavigate();
     const[originalDocuments, setOriginalDocuments] = useState(myDocs);
   const [searchQuery, setSearchQuery] = useState("");
   const [documents, setDocuments] = useState([{}]);
@@ -157,6 +161,10 @@ export default function AllFiles() {
         setDocuments(originalDocuments);
     }
   }, [searchQuery]);
+
+  if(!Cookies.get("token")) {
+    navigate("/login");
+  }
 
   return (
     <>

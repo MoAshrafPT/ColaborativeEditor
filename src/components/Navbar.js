@@ -15,6 +15,7 @@ import Drawer from "@mui/material/Drawer";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
+import ListItemIcon from "@mui/material/ListItemIcon";
 import Collapse from "@mui/material/Collapse";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
@@ -24,6 +25,9 @@ import ScheduleIcon from "@mui/icons-material/Schedule";
 import { useNavigate } from "react-router-dom";
 import AllFiles from "../pages/AllFiles";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
+import LogoutIcon from "@mui/icons-material/Logout";
+import { Link } from "react-router-dom";
+import Cookies from "js-cookie";
 
 export default function Navbar(props) {
   const [searchQuery, setSearchQuery] = useState("");
@@ -92,6 +96,21 @@ export default function Navbar(props) {
           <HelpOutlineIcon />
           <ListItemText primary="Help & Feedback" />
         </ListItem>
+        <Link
+          to="/"
+          style={{ textDecoration: "none" }}
+          onClick={() => {
+            Cookies.remove("token");
+            window.location.reload();
+          }}
+        >
+          <ListItem>
+            <ListItemIcon>
+              <LogoutIcon sx={{ color: "red" }} />
+            </ListItemIcon>
+            <ListItemText primary="Logout" sx={{ color: "red" }} />
+          </ListItem>{" "}
+        </Link>
       </List>
     </Box>
   );

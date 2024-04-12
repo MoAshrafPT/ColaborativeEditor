@@ -11,6 +11,6 @@ const routes = {
   "/signup": () => <Signup />,
   "/": () => <Home />,
   "/all": () => <AllFiles />,
-  "edit": () => <EditDocument />,
+  "edit/:id": () => <EditDocument />,
 };
 export default routes;

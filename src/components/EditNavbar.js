@@ -4,6 +4,8 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import { Box, Button, InputBase, List } from "@mui/material";
 import DescriptionIcon from '@mui/icons-material/Description';
+import { useParams } from "react-router-dom";
+import axios from "axios";
 import {
   Dialog,
   DialogActions,
@@ -22,7 +24,7 @@ export default function EditNavbar() {
   }, [email]);
 
 
-
+  const [fileName, setFileName] = useState("");
 
   const [open, setOpen] = useState(false);
 
@@ -34,12 +36,28 @@ export default function EditNavbar() {
     setOpen(false);
   };
 
+  const {id} = useParams();
+
+  useEffect(() => {
+    axios
+      .get(`http://localhost:8080/file/${id}`)
+      .then((response) => {
+        console.log(response.data);
+        setFileName(response.data.fileName);
+
+      })
+      .catch((error) => {
+        console.log(error);
+      }); 
+  }, []);
+
   return (
+    
     <div>
       <AppBar position="static">
         <Toolbar>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-           <DescriptionIcon/> Document Name
+           <DescriptionIcon/> {fileName}
           </Typography>
           <List>
             <Button color="inherit">Save</Button>

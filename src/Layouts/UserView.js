@@ -4,11 +4,53 @@ import { Container, Typography } from "@mui/material";
 import DocumentCard from "../components/DocumentCard";
 import AddIcon from "@mui/icons-material/Add";
 import { useState } from "react";
-import { recentDocuments, documentTypes } from "../mocks/data/files";
+import {  documentTypes } from "../mocks/data/files";
 import { useEffect } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField, Button } from "@mui/material";
 
 export default function UserView() {
   const [searchQuery, setSearchQuery] = useState("");
+
+  const navigate = useNavigate();
+
+  const user = localStorage.getItem("username");
+
+  const files = JSON.parse(localStorage.getItem("files"));
+
+  const [recentDocuments, setRecentDocuments] = useState(files);
+
+  const [open, setOpen] = useState(false);
+
+  const [name, setName] = useState("");
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const createDocument = (name) => {
+    const userId = localStorage.getItem("userID");
+    console.log(name, userId);
+    axios
+      .post("http://localhost:8080/file/createFile", {
+        fileName: name,
+        userId: userId,
+      })
+      .then((response) => {
+        console.log(response);
+        if(response.status === 201){
+          navigate(`/edit/${response.data.fileID}`);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
 
   const [searchedDocuments, setSearchedDocuments] = useState(recentDocuments);
   useEffect(() => {
@@ -35,7 +77,7 @@ export default function UserView() {
           }}
         >
           <Typography variant="h4" textAlign="center">
-            Welcome User!
+            Welcome {user}!
           </Typography>
           <Typography variant="h6" textAlign="center">
             Start a new document
@@ -50,6 +92,7 @@ export default function UserView() {
           }}
         >
           <DocumentCard
+          onClick={handleClickOpen}
             title="Blank Document"
             content={
               <AddIcon
@@ -97,10 +140,37 @@ export default function UserView() {
             </Typography>
           )}
           {searchedDocuments.map((doc) => (
-            <DocumentCard title={doc.title} content={doc.content} />
+            <DocumentCard title={doc.fileName} content={doc.role} />
           ))}
         </div>
       </section>
+
+
+      <Dialog open={open} onClose={handleClose}>
+        <DialogTitle>Share Document</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+           Enter name of the new document.
+          </DialogContentText>
+          <TextField
+          onChange={(e) => setName(e.target.value)}
+            autoFocus
+            margin="dense"
+            id="name"
+            label="Name"
+            type="text"
+            fullWidth
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Cancel</Button>
+          <Button onClick={()=>{
+            handleClose();
+            createDocument(name);
+            }} disabled={name.length === 0}>Create</Button>
+        </DialogActions>
+      </Dialog>
+
     </>
   );
 }
