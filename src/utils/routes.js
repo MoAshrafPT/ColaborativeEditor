@@ -7,9 +7,10 @@ import EditDocument from "../pages/EditDocument";
 
 const routes = {
   "/login": () => <Login />,
+  "/edit": () => <EditDocument />,
   "/signup": () => <Signup />,
   "/": () => <Home />,
   "/all": () => <AllFiles />,
-  "edit": () => <EditDocument />,
+  "edit/:id": () => <EditDocument />,
 };
 export default routes;

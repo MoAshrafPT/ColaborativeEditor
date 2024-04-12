@@ -1,4 +1,3 @@
-
 import React, { useEffect } from "react";
 import Navbar from "../components/Navbar";
 import { Container, Typography } from "@mui/material";
@@ -6,16 +5,16 @@ import DocumentCard from "../components/DocumentCard";
 import SubjectIcon from "@mui/icons-material/Subject";
 import Pagination from "@mui/material/Pagination";
 import { useState } from "react";
+import { myDocs } from "../mocks/data/files";
+import { Redirect } from "react-router-dom";
+import Cookies from "js-cookie";
+import { useNavigate } from "react-router-dom";
 
-export default function AllFiles({ files, username }) {
-  
-  const [originalDocuments, setOriginalDocuments] = useState(files.map(file => ({
-    title: file.file.fileName,
-    content: file.file.fileContent,
-  })));
+export default function AllFiles() {
+  const navigate = useNavigate();
+    const[originalDocuments, setOriginalDocuments] = useState(myDocs);
   const [searchQuery, setSearchQuery] = useState("");
-  const [documents, setDocuments] = useState(originalDocuments);
- // const [documents, setDocuments] = useState([{}]);
+  const [documents, setDocuments] = useState([{}]);
   useEffect(() => {
     setDocuments([
       {
@@ -163,13 +162,16 @@ export default function AllFiles({ files, username }) {
     }
   }, [searchQuery]);
 
+  if(!Cookies.get("token")) {
+    navigate("/login");
+  }
+
   return (
     <>
       <Navbar setSearchQuery={setSearchQuery} />
       <Container>
-        
         <Typography variant="h3" textAlign="center" marginTop="20px">
-          Welcome {username} to Textorial
+          Welcome to Textorial
         </Typography>
         <Typography variant="h6" textAlign="center" marginTop="20px">
           Here are your recent documents
@@ -193,7 +195,7 @@ export default function AllFiles({ files, username }) {
               No documents found
             </Typography>
           )}
-                  {paginatedDocuments.map((document, index) => (
+          {paginatedDocuments.map((document, index) => (
             <DocumentCard
               key={index}
               title={document.title}

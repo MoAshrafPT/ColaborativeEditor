@@ -4,7 +4,11 @@ import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { EditorState } from "draft-js";
 import EditNavbar from "../components/EditNavbar";
 
+
 export default function EditDocument() {
+
+
+   
     
     const [editorState, setEditorState] = useState(() =>
         EditorState.createEmpty()

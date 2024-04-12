@@ -8,7 +8,7 @@ import { FiLogIn } from "react-icons/fi";
 import ReCAPTCHA from "react-google-recaptcha";
 import axios from 'axios';
 import Login from './Login';
-import Alert from '@mui/lab/Alert';
+
 function Signup() {
 
   const [showSuccessMessage, setShowSuccessMessage] = React.useState(false);
