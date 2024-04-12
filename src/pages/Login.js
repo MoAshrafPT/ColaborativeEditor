@@ -11,6 +11,8 @@ import AllFiles from './AllFiles';
 function Login() {
   const theme = useTheme();
   const [isLoggedIn, setIsLoggedIn] = React.useState(false);
+  const [files, setFiles] = useState([]);
+  const [userId, setUserId] = useState(null);
   const [username, setUsername] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [touchedUser, setTouchedUser] = React.useState(false);
@@ -26,7 +28,7 @@ function Login() {
   //     console.log(error);
   //   });
   // }, []);
-  
+
   const [validUser, setValidUser] = React.useState(false);
   const [validPassword, setValidPassword] = React.useState(false);
 
@@ -43,7 +45,14 @@ function Login() {
       password: password
     })
     .then((response) => {
-      console.log(response);
+      //console.log(response);
+     console.log(response.data.userID);
+      console.log(response.data.username);
+      console.log(response.data.files);
+
+      setUserId(response.data.userID);
+      setUsername(response.data.username);
+      setFiles(response.data.files);
       setIsLoggedIn(true);
     }).catch((error) => {
       console.log(error);
@@ -52,7 +61,7 @@ function Login() {
  
 
   if (isLoggedIn) {
-    return <AllFiles />;
+    return <AllFiles userId={userId} username={username} files={files}/>;
   }
   return (
     

@@ -1,3 +1,4 @@
+
 import React, { useEffect } from "react";
 import Navbar from "../components/Navbar";
 import { Container, Typography } from "@mui/material";
@@ -6,131 +7,15 @@ import SubjectIcon from "@mui/icons-material/Subject";
 import Pagination from "@mui/material/Pagination";
 import { useState } from "react";
 
-export default function AllFiles() {
-    const[originalDocuments, setOriginalDocuments] = useState([
-        {
-          title: "Document 1",
-          content: (
-            <SubjectIcon
-              sx={{ fontSize: "110px", cursor: "pointer", color: "#3f51b5" }}
-            />
-          ),
-        },
-        {
-          title: "Document 2",
-          content: (
-            <SubjectIcon
-              sx={{ fontSize: "110px", cursor: "pointer", color: "#3f51b5" }}
-            />
-          ),
-        },
-        {
-          title: "Document 3",
-          content: (
-            <SubjectIcon
-              sx={{ fontSize: "110px", cursor: "pointer", color: "#3f51b5" }}
-            />
-          ),
-        },
-        {
-          title: "Document 4",
-          content: (
-            <SubjectIcon
-              sx={{ fontSize: "110px", cursor: "pointer", color: "#3f51b5" }}
-            />
-          ),
-        },
-        {
-          title: "Document 5",
-          content: (
-            <SubjectIcon
-              sx={{ fontSize: "110px", cursor: "pointer", color: "#3f51b5" }}
-            />
-          ),
-        },
-        {
-          title: "Document 6",
-          content: (
-            <SubjectIcon
-              sx={{ fontSize: "110px", cursor: "pointer", color: "#3f51b5" }}
-            />
-          ),
-        },
-        {
-          title: "Document 7",
-          content: (
-            <SubjectIcon
-              sx={{ fontSize: "110px", cursor: "pointer", color: "#3f51b5" }}
-            />
-          ),
-        },
-        {
-          title: "Document 8",
-          content: (
-            <SubjectIcon
-              sx={{ fontSize: "110px", cursor: "pointer", color: "#3f51b5" }}
-            />
-          ),
-        },
-        {
-          title: "Document 9",
-          content: (
-            <SubjectIcon
-              sx={{ fontSize: "110px", cursor: "pointer", color: "#3f51b5" }}
-            />
-          ),
-        },
-        {
-          title: "Document 10",
-          content: (
-            <SubjectIcon
-              sx={{ fontSize: "110px", cursor: "pointer", color: "#3f51b5" }}
-            />
-          ),
-        },
-        {
-          title: "Document 11",
-          content: (
-            <SubjectIcon
-              sx={{ fontSize: "110px", cursor: "pointer", color: "#3f51b5" }}
-            />
-          ),
-        },
-        {
-          title: "Document 12",
-          content: (
-            <SubjectIcon
-              sx={{ fontSize: "110px", cursor: "pointer", color: "#3f51b5" }}
-            />
-          ),
-        },
-        {
-          title: "Document 13",
-          content: (
-            <SubjectIcon
-              sx={{ fontSize: "110px", cursor: "pointer", color: "#3f51b5" }}
-            />
-          ),
-        },
-        {
-          title: "Document 14",
-          content: (
-            <SubjectIcon
-              sx={{ fontSize: "110px", cursor: "pointer", color: "#3f51b5" }}
-            />
-          ),
-        },
-        {
-          title: "Document 15",
-          content: (
-            <SubjectIcon
-              sx={{ fontSize: "110px", cursor: "pointer", color: "#3f51b5" }}
-            />
-          ),
-        },
-      ]);
+export default function AllFiles({ files, username }) {
+  
+  const [originalDocuments, setOriginalDocuments] = useState(files.map(file => ({
+    title: file.file.fileName,
+    content: file.file.fileContent,
+  })));
   const [searchQuery, setSearchQuery] = useState("");
-  const [documents, setDocuments] = useState([{}]);
+  const [documents, setDocuments] = useState(originalDocuments);
+ // const [documents, setDocuments] = useState([{}]);
   useEffect(() => {
     setDocuments([
       {
@@ -282,8 +167,9 @@ export default function AllFiles() {
     <>
       <Navbar setSearchQuery={setSearchQuery} />
       <Container>
+        
         <Typography variant="h3" textAlign="center" marginTop="20px">
-          Welcome to Textorial
+          Welcome {username} to Textorial
         </Typography>
         <Typography variant="h6" textAlign="center" marginTop="20px">
           Here are your recent documents
@@ -307,7 +193,7 @@ export default function AllFiles() {
               No documents found
             </Typography>
           )}
-          {paginatedDocuments.map((document, index) => (
+                  {paginatedDocuments.map((document, index) => (
             <DocumentCard
               key={index}
               title={document.title}
