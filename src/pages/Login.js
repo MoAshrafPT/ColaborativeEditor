@@ -4,12 +4,13 @@ import { FaUserAstronaut, FaFacebook, FaGoogle } from "react-icons/fa";
 import { TbPasswordFingerprint } from "react-icons/tb";
 //import ForgetPassword from "../components/ForgetPassword";
 import { TextField, Button } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
 import { FiLogIn } from "react-icons/fi";
 import axios from 'axios';
-import AllFiles from './AllFiles'; 
+import { useNavigate } from "react-router-dom";
+import Cookies from 'js-cookie';
+
 function Login() {
-  const theme = useTheme();
+  const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = React.useState(false);
   const [files, setFiles] = useState([]);
   const [userId, setUserId] = useState(null);
@@ -19,15 +20,7 @@ function Login() {
   const [touchedPassword, setTouchedPassword] = React.useState(false);
   const [remember, setRemember] = React.useState(false);
 
-  // useEffect(() => {
-  //   //replace with actual login api
-  //   axios.post('http://localhost:8080/auth/login', {})
-  //   .then((response) => {
-  //     console.log(response);
-  //   }).catch((error) => {
-  //     console.log(error);
-  //   });
-  // }, []);
+ 
 
   const [validUser, setValidUser] = React.useState(false);
   const [validPassword, setValidPassword] = React.useState(false);
@@ -40,19 +33,18 @@ function Login() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
+
+
+    const config = {
+      headers: { Authorization: `Bearer ${Cookies.get('token')}` }
+    };
+
     axios.post('http://localhost:8080/auth/login', {
       username: username,
       password: password
-    })
+    },config)
     .then((response) => {
-      //console.log(response);
-     console.log(response.data.userID);
-      console.log(response.data.username);
-      console.log(response.data.files);
-
-      setUserId(response.data.userID);
-      setUsername(response.data.username);
-      setFiles(response.data.files);
+      Cookies.set('token', response.data.token);
       setIsLoggedIn(true);
     }).catch((error) => {
       console.log(error);
@@ -61,7 +53,9 @@ function Login() {
  
 
   if (isLoggedIn) {
-    return <AllFiles userId={userId} username={username} files={files}/>;
+    // return <AllFiles userId={userId} username={username} files={files}/>;
+    navigate("/");
+
   }
   return (
     
