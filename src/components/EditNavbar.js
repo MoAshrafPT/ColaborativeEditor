@@ -17,6 +17,9 @@ import {
 import { useState } from "react";
 
 export default function EditNavbar() {
+
+
+
   const [isValidEmail, setIsValidEmail] = useState(false);
   const [email, setEmail] = useState("");
   useEffect(() => {
@@ -28,6 +31,9 @@ export default function EditNavbar() {
 
   const [open, setOpen] = useState(false);
 
+  const [openDelete, setOpenDelete] = useState(false);
+
+
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -36,9 +42,38 @@ export default function EditNavbar() {
     setOpen(false);
   };
 
+  const handleClickDelete = () => {
+    setOpenDelete(true);
+  };
+
+  const handleCloseDelete = () => {
+    setOpenDelete(false);
+  };
+
   const {id} = useParams();
 
+  const files = JSON.parse(localStorage.getItem("files"));
+
+  const [isOwner, setIsOwner] = useState(false);
+
+  const deleteDocument = () => {
+    axios
+      .delete(`http://localhost:8080/file/delete/${id}`)
+      .then((response) => {
+        console.log(response);
+        if(response.status === 200){
+          window.location.href = "/";
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
+
+
   useEffect(() => {
+    setIsOwner(files.find((file) => file.fileID === id && file.role === "OWNER") !== undefined);
     axios
       .get(`http://localhost:8080/file/${id}`)
       .then((response) => {
@@ -66,7 +101,8 @@ export default function EditNavbar() {
               Share
             </Button>
             <Button color="inherit">Print</Button>
-            <Button color="inherit">Delete</Button>
+            {isOwner && <Button color="inherit" onClick={handleClickDelete}>Delete</Button>}
+            
           </List>
         </Toolbar>
       </AppBar>
@@ -88,10 +124,31 @@ export default function EditNavbar() {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleClose} disabled={!isValidEmail}>Share</Button>
+          <Button onClick={handleCloseDelete}>Cancel</Button>
+          <Button onClick={handleCloseDelete} disabled={!isValidEmail}>Share</Button>
         </DialogActions>
       </Dialog>
+
+
+      <Dialog open={openDelete} onClose={handleCloseDelete}>
+        <DialogTitle>Delete Document</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Are you sure you want to delete this document?
+          </DialogContentText>
+          
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDelete}>Cancel</Button>
+          <Button onClick={()=>{
+            handleCloseDelete()
+            deleteDocument();
+          
+          }} sx={{color: "red"}} >Delete</Button>
+        </DialogActions>
+      </Dialog>
+
+
     </div>
   );
 }

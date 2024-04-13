@@ -5,9 +5,21 @@ import "./TextEditor.css";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 
+
 const TOOLBAR_OPTIONS = [
-  // Your toolbar options...
-];
+    [{ header: [1, 2, 3, 4, 5, false] }],
+    [{ font: [] }],
+    [{ size: ["small", "normal", "large", "huge"] }],
+    [{ list: "ordered" }, { list: "bullet" }],
+    ["bold", "italic", "underline"],
+    [{ color: [] }, { background: [] }],
+    [{ script: "sub" }, { script: "super" }],
+    [{ align: "" }],
+    [{ direction: "rtl" }],
+    [{ align: [] }],
+    ["link", "image", "blockquote", "code-block"],
+    ["clean"],
+  ];
 
 export default function TextEditor() {
   const { id } = useParams();
