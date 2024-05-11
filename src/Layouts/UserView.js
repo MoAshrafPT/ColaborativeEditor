@@ -17,9 +17,32 @@ export default function UserView() {
 
   const user = localStorage.getItem("username");
 
-  const files = JSON.parse(localStorage.getItem("files"));
+  // const files = JSON.parse(localStorage.getItem("files"));
 
-  const [recentDocuments, setRecentDocuments] = useState(files);
+  const [files, setFiles] = useState([]);
+
+  const [recentDocuments, setRecentDocuments] = useState([]);
+  const [searchedDocuments, setSearchedDocuments] = useState(recentDocuments);
+
+  useEffect(() => {
+    
+    const userId = localStorage.getItem("userID");
+    console.log(userId);
+    axios
+      .get(`http://localhost:8081/user/${userId}`)
+      .then((response) => {
+        console.log(response);
+        setFiles(response.data.files);
+        setRecentDocuments(response.data.files);
+        setSearchedDocuments(response.data.files);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  
+  }, []);
+
+  
 
   const [open, setOpen] = useState(false);
 
@@ -37,7 +60,7 @@ export default function UserView() {
     const userId = localStorage.getItem("userID");
     console.log(name, userId);
     axios
-      .post("http://localhost:8080/file/createFile", {
+      .post("http://localhost:8081/file/createFile", {
         fileName: name,
         userId: userId,
       })
@@ -52,12 +75,15 @@ export default function UserView() {
       });
   }
 
-  const [searchedDocuments, setSearchedDocuments] = useState(recentDocuments);
+  
   useEffect(() => {
+    console.log(files, "files");
+    
     if (searchQuery) {
+      console.log(searchQuery);
       setSearchedDocuments(
-        recentDocuments.filter((document) =>
-          document.title.toLowerCase().includes(searchQuery.toLowerCase())
+        files.filter((document) =>
+          document.fileName.toLowerCase().includes(searchQuery.toLowerCase())
         )
       );
     } else {
@@ -104,8 +130,8 @@ export default function UserView() {
               />
             }
           />
-          {documentTypes.map((doc) => (
-            <DocumentCard title={doc.title} content={doc.content} />
+          {documentTypes.map((doc,i) => (
+            <DocumentCard key = {i} title={doc.title} content={doc.content} />
           ))}
         </div>
       </section>
@@ -139,8 +165,8 @@ export default function UserView() {
               No documents found
             </Typography>
           )}
-          {searchedDocuments.map((doc) => (
-            <DocumentCard title={doc.fileName} content={doc.role} />
+          {searchedDocuments.map((doc, i) => (
+            <DocumentCard key={i} title={doc.fileName} content={doc.role} />
           ))}
         </div>
       </section>

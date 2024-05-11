@@ -6,7 +6,7 @@ import ContactEmergencyIcon from "@mui/icons-material/ContactEmergency";
 import SubjectIcon from "@mui/icons-material/Subject";
 export const recentDocuments = [
     {
-      title: "Document 1",
+      fileName: "Document 1",
       content: (
         <SubjectIcon
           sx={{ fontSize: "110px", cursor: "pointer", color: "#3f51b5" }}
@@ -14,7 +14,7 @@ export const recentDocuments = [
       ),
     },
     {
-      title: "Document 2",
+      fileName: "Document 2",
       content: (
         <SubjectIcon
           sx={{ fontSize: "110px", cursor: "pointer", color: "#3f51b5" }}
@@ -22,7 +22,7 @@ export const recentDocuments = [
       ),
     },
     {
-      title: "Document 3",
+      fileName: "Document 3",
       content: (
         <SubjectIcon
           sx={{ fontSize: "110px", cursor: "pointer", color: "#3f51b5" }}
@@ -30,7 +30,7 @@ export const recentDocuments = [
       ),
     },
     {
-      title: "Document 4",
+      fileName: "Document 4",
       content: (
         <SubjectIcon
           sx={{ fontSize: "110px", cursor: "pointer", color: "#3f51b5" }}
@@ -38,7 +38,7 @@ export const recentDocuments = [
       ),
     },
     {
-      title: "Document 5",
+      fileName: "Document 5",
       content: (
         <SubjectIcon
           sx={{ fontSize: "110px", cursor: "pointer", color: "#3f51b5" }}
@@ -48,7 +48,7 @@ export const recentDocuments = [
   ];
  export const documentTypes = [
     {
-      title: "Report",
+      fileName: "Report",
       content: (
         <SummarizeIcon
           sx={{ fontSize: "110px", cursor: "pointer", color: "#3f51b5" }}
@@ -56,7 +56,7 @@ export const recentDocuments = [
       ),
     },
     {
-      title: "Proposal",
+      fileName: "Proposal",
       content: (
         <PlagiarismIcon
           sx={{ fontSize: "110px", cursor: "pointer", color: "#3f51b5" }}
@@ -64,7 +64,7 @@ export const recentDocuments = [
       ),
     },
     {
-      title: "Brochure",
+      fileName: "Brochure",
       content: (
         <FilePresentIcon
           sx={{ fontSize: "110px", cursor: "pointer", color: "#3f51b5" }}
@@ -72,7 +72,7 @@ export const recentDocuments = [
       ),
     },
     {
-      title: "Letter",
+      fileName: "Letter",
       content: (
         <MarkAsUnreadIcon
           sx={{ fontSize: "110px", cursor: "pointer", color: "#3f51b5" }}
@@ -80,7 +80,7 @@ export const recentDocuments = [
       ),
     },
     {
-      title: "Resume",
+      fileName: "Resume",
       content: (
         <ContactEmergencyIcon
           sx={{ fontSize: "110px", cursor: "pointer", color: "#3f51b5" }}
@@ -91,7 +91,7 @@ export const recentDocuments = [
 
   export const myDocs =[
     {
-      title: "Document 1",
+      fileName: "Document 1",
       content: (
         <SubjectIcon
           sx={{ fontSize: "110px", cursor: "pointer", color: "#3f51b5" }}
@@ -99,7 +99,7 @@ export const recentDocuments = [
       ),
     },
     {
-      title: "Document 2",
+      fileName: "Document 2",
       content: (
         <SubjectIcon
           sx={{ fontSize: "110px", cursor: "pointer", color: "#3f51b5" }}
@@ -107,7 +107,7 @@ export const recentDocuments = [
       ),
     },
     {
-      title: "Document 3",
+      fileName: "Document 3",
       content: (
         <SubjectIcon
           sx={{ fontSize: "110px", cursor: "pointer", color: "#3f51b5" }}
@@ -115,7 +115,7 @@ export const recentDocuments = [
       ),
     },
     {
-      title: "Document 4",
+      fileName: "Document 4",
       content: (
         <SubjectIcon
           sx={{ fontSize: "110px", cursor: "pointer", color: "#3f51b5" }}
@@ -123,7 +123,7 @@ export const recentDocuments = [
       ),
     },
     {
-      title: "Document 5",
+      fileName: "Document 5",
       content: (
         <SubjectIcon
           sx={{ fontSize: "110px", cursor: "pointer", color: "#3f51b5" }}
@@ -131,7 +131,7 @@ export const recentDocuments = [
       ),
     },
     {
-      title: "Document 6",
+      fileName: "Document 6",
       content: (
         <SubjectIcon
           sx={{ fontSize: "110px", cursor: "pointer", color: "#3f51b5" }}
@@ -139,7 +139,7 @@ export const recentDocuments = [
       ),
     },
     {
-      title: "Document 7",
+      fileName: "Document 7",
       content: (
         <SubjectIcon
           sx={{ fontSize: "110px", cursor: "pointer", color: "#3f51b5" }}
@@ -147,7 +147,7 @@ export const recentDocuments = [
       ),
     },
     {
-      title: "Document 8",
+      fileName: "Document 8",
       content: (
         <SubjectIcon
           sx={{ fontSize: "110px", cursor: "pointer", color: "#3f51b5" }}
@@ -155,7 +155,7 @@ export const recentDocuments = [
       ),
     },
     {
-      title: "Document 9",
+      fileName: "Document 9",
       content: (
         <SubjectIcon
           sx={{ fontSize: "110px", cursor: "pointer", color: "#3f51b5" }}
@@ -163,7 +163,7 @@ export const recentDocuments = [
       ),
     },
     {
-      title: "Document 10",
+      fileName: "Document 10",
       content: (
         <SubjectIcon
           sx={{ fontSize: "110px", cursor: "pointer", color: "#3f51b5" }}
@@ -171,7 +171,7 @@ export const recentDocuments = [
       ),
     },
     {
-      title: "Document 11",
+      fileName: "Document 11",
       content: (
         <SubjectIcon
           sx={{ fontSize: "110px", cursor: "pointer", color: "#3f51b5" }}
@@ -179,7 +179,7 @@ export const recentDocuments = [
       ),
     },
     {
-      title: "Document 12",
+      fileName: "Document 12",
       content: (
         <SubjectIcon
           sx={{ fontSize: "110px", cursor: "pointer", color: "#3f51b5" }}
@@ -187,7 +187,7 @@ export const recentDocuments = [
       ),
     },
     {
-      title: "Document 13",
+      fileName: "Document 13",
       content: (
         <SubjectIcon
           sx={{ fontSize: "110px", cursor: "pointer", color: "#3f51b5" }}
@@ -195,7 +195,7 @@ export const recentDocuments = [
       ),
     },
     {
-      title: "Document 14",
+      fileName: "Document 14",
       content: (
         <SubjectIcon
           sx={{ fontSize: "110px", cursor: "pointer", color: "#3f51b5" }}
@@ -203,7 +203,7 @@ export const recentDocuments = [
       ),
     },
     {
-      title: "Document 15",
+      fileName: "Document 15",
       content: (
         <SubjectIcon
           sx={{ fontSize: "110px", cursor: "pointer", color: "#3f51b5" }}

@@ -1,23 +1,61 @@
-.card{
-    width: 200px;
-    height: 270px;
-    display: inline-block;
-    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-    transition: 0.3s;
-    margin: 10px;
-    padding: 10px;
-    background-color: #f8f9fa;
+/* Document Card Container */
+.document-card {
+    border: 1px solid #dadce0;
+    border-radius: 3px;
+    
+    margin: 16px;
+   
+    overflow: hidden;
+    transition: box-shadow 0.3s;
+  }
+  
+  .document-card:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+ /* Document Card Header */
+.document-card-header {
+  display: flex;
+  align-items: center; /* Center items vertically */
+  justify-content: space-between;
+  height: 200px;
+  width: 160px;
+  padding: 16px;
+  border-bottom: 1px solid #dadce0;
+  background-color: #f9f9f9;
 }
-.card-body{
-    padding: 10px;
+
+.document-card-title {
+  font-size: 16px;
+  font-weight: 500;
+  flex-grow: 1;
+  margin-right: 8px;
 }
-.card-title{
-    font-size: 20px;
-    font-weight: bold;
-}
-.card-text{
-    font-size: 16px;
-}
-section{
- padding: 10px;
-}
+  
+  /* Document Card Content */
+  .document-card-content {
+    padding: 16px;
+  }
+  
+  /* Document Card Actions Menu */
+  .document-card-menu {
+    margin-right: -8px; /* Adjust to align with header */
+  }
+  
+  /* Document Card Menu Icon Button */
+  .document-card-menu-button {
+    padding: 8px;
+    color: #697481;
+  }
+  
+  /* Document Card Menu Items */
+  .document-card-menu-item {
+    font-size: 14px;
+    padding: 8px 16px;
+    color: #202124;
+  }
+  
+  .document-card-menu-item:hover {
+    background-color: #f1f3f4;
+  }
+  

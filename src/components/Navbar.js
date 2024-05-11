@@ -59,8 +59,7 @@ export default function Navbar(props) {
     <Box sx={{ width: 300, paddingTop: 2 }} role="presentation">
       <List>
         <Typography variant="h6" textAlign="center">
-          <TextFieldsIcon />
-          extorial
+          AFOTE
         </Typography>
         <ListItem onClick={handleClickRecents}>
           <ScheduleIcon />
@@ -101,10 +100,11 @@ export default function Navbar(props) {
           style={{ textDecoration: "none" }}
           onClick={() => {
             Cookies.remove("token");
+            Cookies.remove("username");
             window.location.reload();
           }}
         >
-          <ListItem>
+          <ListItem >
             <ListItemIcon>
               <LogoutIcon sx={{ color: "red" }} />
             </ListItemIcon>
@@ -117,7 +117,7 @@ export default function Navbar(props) {
 
   const my_pages = ["Your Files"];
   const routes = [<AllFiles />];
-  const my_settings = ["Profile", "Account", "Logout"];
+  const my_settings = ["Profile", "Account"];
 
   const [anchorElUser, setAnchorElUser] = useState(null);
 
@@ -139,7 +139,7 @@ export default function Navbar(props) {
             sx={{ marginTop: 1, fontSize: 30, color: "white" }}
           />
         </Button>
-        <TextFieldsIcon />
+        
         <Typography
           variant="h5"
           noWrap
@@ -154,7 +154,7 @@ export default function Navbar(props) {
             textDecoration: "none",
           }}
         >
-          extorial
+         AFOTE
         </Typography>
         <Box sx={{ flexWrap: "wrap", flexGrow: 1, display: "flex" }}>
           {my_pages.map((page) => (
@@ -179,7 +179,7 @@ export default function Navbar(props) {
         <Box sx={{ flexGrow: 0 }}>
           <Tooltip title="Open Profile">
             <IconButton onClick={handleOpenSettingsMenu} sx={{ p: 0 }}>
-              <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+              <Avatar alt={localStorage.getItem("username")} src= "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.biography.com%2Fscientists%2Falbert-einstein&psig=AOvVaw1FXxL7UItPlPWYX1gmAbIN&ust=1715265845850000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCICiuLGl_oUDFQAAAAAdAAAAABAE" />
             </IconButton>
           </Tooltip>
           <Menu

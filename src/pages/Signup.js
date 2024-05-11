@@ -41,7 +41,7 @@ function Signup() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    axios.post('http://localhost:8080/auth/signup', {
+    axios.post('http://localhost:8081/auth/signup', {
       username: username,
       password: password,
       email: email
