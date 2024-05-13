@@ -5,6 +5,8 @@ import "./TextEditor.css";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import io from "socket.io-client";
+import { v4 as uuidv4 } from "uuid";
+import operationalTransform from "../utils/operationalTranform";
 
 const SAVE_INTERVAL_MS = 5000;
 
@@ -24,6 +26,10 @@ const TOOLBAR_OPTIONS = [
 ];
 
 export default function TextEditor(props) {
+  // const [clientVersion, setClientVersion] = useState(0);
+  let clientVersion = 0;
+  // const [operationQueue, setOperationQueue] = useState([]);
+  let operationQueue = [];
   const { fileId, userId } = useParams();
   const [socket, setSocket] = useState();
   const [content, setContent] = useState("");
@@ -66,9 +72,28 @@ export default function TextEditor(props) {
   useEffect(() => {
     if (socket == null || quill == null) return;
 
-    const handler = (delta) => {
-      console.log(delta);
-      quill.updateContents(delta);
+    const handler = (delta, tempV, acknowledgeID) => {
+      console.log("YYYYYYYy", delta, tempV, acknowledgeID);
+      console.log(operationQueue, "operationQueue");
+  
+
+      if (operationQueue[0] && acknowledgeID === operationQueue[0].uuid) {
+        console.log("I am in the if statement");
+        // setOperationQueue((prev) => prev.slice(1));
+        operationQueue = operationQueue.slice(1);
+
+      } else {
+        if (operationQueue.length !== 0) {
+          console.log("I am in the else statement");
+          delta = operationalTransform(delta, operationQueue);
+        }
+
+        quill.updateContents(delta);
+      }
+      console.log(tempV, "version from receiving");
+      // setClientVersion(tempV);
+      clientVersion = tempV;
+     
     };
     socket.on("receive-changes", handler);
 
@@ -82,7 +107,12 @@ export default function TextEditor(props) {
 
     const handler = (delta, oldDelta, source) => {
       if (source !== "user") return;
-      socket.emit("send-changes", delta);
+      console.log(" I am in text change");
+      const operation = { delta, uuid: uuidv4() };
+      operationQueue.push(operation);
+      console.log(operationQueue, "operationQueue in sending");
+      console.log("clientVersion", clientVersion);
+      socket.emit("send-changes", delta, clientVersion, operation.uuid);
     };
     quill.on("text-change", handler);
 
@@ -93,7 +123,7 @@ export default function TextEditor(props) {
 
   useEffect(() => {
     if (socket == null || quill == null) return;
-  
+
     if (props.role === "VIEWER") {
       console.log("disabling");
       quill.disable();
@@ -102,6 +132,23 @@ export default function TextEditor(props) {
     }
   }, [props.role, socket, quill]);
 
+  useEffect(()=>{
+    if (socket == null || quill == null) return;
+
+    const handler = (acknowledgeID, tempV) => {
+      console.log("I am in acknowledge");
+      if (operationQueue[0] && acknowledgeID === operationQueue[0].uuid) {
+        console.log("I am in the if statement");
+        operationQueue = operationQueue.slice(1);
+        console.log(operationQueue, "operationQueue");
+      }
+      console.log(tempV, "version from acknowledge");
+      clientVersion = tempV;
+    };
+    socket.on("acknowledge", handler);
+
+  },[quill,socket])
+
   const wrapperRef = useCallback((wrapper) => {
     if (wrapper == null) return;
 
@@ -109,11 +156,12 @@ export default function TextEditor(props) {
     const editor = document.createElement("div");
     wrapper.append(editor);
     const q = new Quill(editor, {
+      value: "skksssssss",
       theme: "snow",
       modules: { toolbar: TOOLBAR_OPTIONS },
     });
     q.disable();
-    q.setText("Awaiting document to load...");
+    // q.setText("Awaiting document to load...");
     setQuill(q);
   }, []);
   return <div className="container" ref={wrapperRef}></div>;
