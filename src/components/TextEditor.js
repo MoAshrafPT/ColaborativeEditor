@@ -82,7 +82,7 @@ export default function TextEditor(props) {
         console.log("I am in the if statement");
         // setOperationQueue((prev) => prev.slice(1));
         operationQueue = operationQueue.slice(1);
-
+        return;
       } else {
         if (operationQueue.length !== 0) {
           console.log("I am in the else statement");
