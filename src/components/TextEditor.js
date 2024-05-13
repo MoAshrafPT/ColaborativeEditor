@@ -8,6 +8,9 @@ import io from "socket.io-client";
 import { v4 as uuidv4 } from "uuid";
 import operationalTransform from "../utils/operationalTranform";
 
+import QuillCursors from "quill-cursors";
+Quill.register("modules/cursors", QuillCursors);
+
 const SAVE_INTERVAL_MS = 5000;
 
 const TOOLBAR_OPTIONS = [
@@ -35,6 +38,7 @@ export default function TextEditor(props) {
   const [content, setContent] = useState("");
   const [quill, setQuill] = useState(null);
   const role = props.role;
+
   useEffect(() => {
     console.log("inner role ", role);
     const s = io("http://localhost:3001");
@@ -47,9 +51,13 @@ export default function TextEditor(props) {
 
   useEffect(() => {
     if (socket == null || quill == null) return;
+    const cursorManager = quill.getModule("cursors");
 
-    socket.once("load-document", (document) => {
+    cursorManager.createCursor("cursor-id", "User Name", "red");
+
+    socket.once("load-document", (document, serverVersion) => {
       quill.setContents(document);
+      clientVersion = serverVersion + 1;
       //quill.enable();
     });
 
@@ -75,13 +83,11 @@ export default function TextEditor(props) {
     const handler = (delta, tempV, acknowledgeID) => {
       console.log("YYYYYYYy", delta, tempV, acknowledgeID);
       console.log(operationQueue, "operationQueue");
-  
 
       if (operationQueue[0] && acknowledgeID === operationQueue[0].uuid) {
         console.log("I am in the if statement");
         // setOperationQueue((prev) => prev.slice(1));
         operationQueue = operationQueue.slice(1);
-
       } else {
         if (operationQueue.length !== 0) {
           console.log("I am in the else statement");
@@ -93,12 +99,29 @@ export default function TextEditor(props) {
       console.log(tempV, "version from receiving");
       // setClientVersion(tempV);
       clientVersion = tempV;
-     
     };
     socket.on("receive-changes", handler);
+    socket.on("receive-cursor", (range) => {
+      const cursorManager = quill.getModule("cursors");
+      cursorManager.setCursor(
+        "cursor-id",
+        range.index,
+        range.length,
+        "User Name"
+      );
+    });
 
     return () => {
       socket.off("receive-changes", handler);
+      socket.off("receive-cursor", (range) => {
+        const cursorManager = quill.getModule("cursors");
+        cursorManager.setCursor(
+          "cursor-id",
+          range.index,
+          range.length,
+          "User Name"
+        );
+      });
     };
   }, [socket, quill]);
 
@@ -113,11 +136,22 @@ export default function TextEditor(props) {
       console.log(operationQueue, "operationQueue in sending");
       console.log("clientVersion", clientVersion);
       socket.emit("send-changes", delta, clientVersion, operation.uuid);
+      clientVersion++;
     };
     quill.on("text-change", handler);
+    quill.on("selection-change", (range, oldRange, source) => {
+      if (source === "user") {
+        socket.emit("send-cursor", range);
+      }
+    });
 
     return () => {
       quill.off("text-change", handler);
+      quill.off("selection-change", (range, oldRange, source) => {
+        if (source === "user") {
+          socket.emit("send-cursor", range);
+        }
+      });
     };
   }, [socket, quill]);
 
@@ -132,7 +166,7 @@ export default function TextEditor(props) {
     }
   }, [props.role, socket, quill]);
 
-  useEffect(()=>{
+  useEffect(() => {
     if (socket == null || quill == null) return;
 
     const handler = (acknowledgeID, tempV) => {
@@ -143,11 +177,10 @@ export default function TextEditor(props) {
         console.log(operationQueue, "operationQueue");
       }
       console.log(tempV, "version from acknowledge");
-      clientVersion = tempV;
+      //clientVersion = tempV;
     };
     socket.on("acknowledge", handler);
-
-  },[quill,socket])
+  }, [quill, socket]);
 
   const wrapperRef = useCallback((wrapper) => {
     if (wrapper == null) return;
@@ -158,7 +191,7 @@ export default function TextEditor(props) {
     const q = new Quill(editor, {
       value: "skksssssss",
       theme: "snow",
-      modules: { toolbar: TOOLBAR_OPTIONS },
+      modules: { toolbar: TOOLBAR_OPTIONS, cursors: true },
     });
     q.disable();
     // q.setText("Awaiting document to load...");
