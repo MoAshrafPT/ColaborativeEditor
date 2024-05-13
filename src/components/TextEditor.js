@@ -48,8 +48,9 @@ export default function TextEditor(props) {
   useEffect(() => {
     if (socket == null || quill == null) return;
 
-    socket.once("load-document", (document) => {
+    socket.once("load-document", (document, serverVersion) => {
       quill.setContents(document);
+      clientVersion = serverVersion + 1;
       //quill.enable();
     });
 
