@@ -9,6 +9,7 @@ import { v4 as uuidv4 } from "uuid";
 import operationalTransform from "../utils/operationalTranform";
 import QuillCursors from "quill-cursors";
 import  getRandomHexColor  from "../utils/getRandomHexColor";
+import AsyncLock from "async-lock"
 Quill.register("modules/cursors", QuillCursors);
 
 const SAVE_INTERVAL_MS = 2000;
@@ -38,6 +39,7 @@ export default function TextEditor(props) {
   const [content, setContent] = useState("");
   const [quill, setQuill] = useState(null);
   const role = props.role;
+  const lock = new AsyncLock();
   useEffect(() => {
     console.log("inner role ", role);
     const s = io("http://localhost:3001");
@@ -76,10 +78,11 @@ export default function TextEditor(props) {
   useEffect(() => {
     if (socket == null || quill == null) return;
 
-    const handler = (delta, tempV, acknowledgeID) => {
+    const handler = async (delta, tempV, acknowledgeID) => {
       console.log("YYYYYYYy", delta, tempV, acknowledgeID);
       console.log(operationQueue, "operationQueue");
-
+//////////////////////////////////////////////////////
+await lock.acquire(fileId, async () => {
       if (operationQueue[0] && acknowledgeID === operationQueue[0].uuid) {
         console.log("I am in the if statement");
         return;
@@ -91,9 +94,12 @@ export default function TextEditor(props) {
 
         quill.updateContents(delta);
       }
+  
       console.log(tempV, "version from receiving");
       // setClientVersion(tempV);
       clientVersion = tempV;
+      ////////////////////////////////////////////////////
+});
     };
     socket.on("receive-changes", handler);
 
