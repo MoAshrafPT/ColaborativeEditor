@@ -38,6 +38,7 @@ export default function TextEditor(props) {
   const [content, setContent] = useState("");
   const [quill, setQuill] = useState(null);
   const role = props.role;
+  let ack = true;
   useEffect(() => {
     console.log("inner role ", role);
     const s = io("http://localhost:3001");
@@ -53,7 +54,7 @@ export default function TextEditor(props) {
 
     socket.once("load-document", (document, serverVersion) => {
       quill.setContents(document);
-      clientVersion = serverVersion + 1;
+      clientVersion = serverVersion;
       //quill.enable();
     });
 
@@ -77,23 +78,19 @@ export default function TextEditor(props) {
     if (socket == null || quill == null) return;
 
     const handler = (delta, tempV, acknowledgeID) => {
-      console.log("YYYYYYYy", delta, tempV, acknowledgeID);
-      console.log(operationQueue, "operationQueue");
-
-      if (operationQueue[0] && acknowledgeID === operationQueue[0].uuid) {
-        console.log("I am in the if statement");
-        return;
-      } else {
         if (operationQueue.length !== 0) {
           console.log("I am in the else statement");
           delta = operationalTransform(delta, operationQueue);
         }
+        else{
+          clientVersion = tempV;
+        }
 
         quill.updateContents(delta);
-      }
-      console.log(tempV, "version from receiving");
-      // setClientVersion(tempV);
-      clientVersion = tempV;
+        console.log(delta, "delta from receiving");
+        console.log(quill.contents, "quill contents")
+      
+      
     };
     socket.on("receive-changes", handler);
 
@@ -107,13 +104,16 @@ export default function TextEditor(props) {
 
     const handler = (delta, oldDelta, source) => {
       if (source !== "user") return;
-      console.log(" I am in text change");
+     
       const operation = { delta, uuid: uuidv4() };
       operationQueue.push(operation);
-      console.log(operationQueue, "operationQueue in sending");
-      console.log("clientVersion", clientVersion);
-      socket.emit("send-changes", delta, clientVersion, operation.uuid);
-      //clientVersion++;
+     
+     if(ack === true)
+      {
+         ack = false;
+         socket.emit("send-changes", operationQueue[0].delta, clientVersion, operationQueue[0].uuid);
+      } 
+     
     };
     quill.on("text-change", handler);
 
@@ -138,14 +138,16 @@ export default function TextEditor(props) {
 
     const handler = (acknowledgeID, tempV) => {
       console.log("I am in acknowledge");
-      if (operationQueue[0] && acknowledgeID === operationQueue[0].uuid) {
-        console.log("I am in the if statement");
-        operationQueue = operationQueue.slice(1);
-        console.log(operationQueue, "operationQueue");
-        
-      }
-      console.log(tempV, "version from acknowledge");
+      operationQueue.slice(1);
       clientVersion = tempV;
+      if (operationQueue.length > 0) {
+        console.log("I am in acknowledge if");
+       
+        socket.emit("send-changes", operationQueue[0].delta, clientVersion, operationQueue[0].uuid);
+      }
+      else{
+        ack = true;
+      }
     };
     socket.on("acknowledge", handler);
   }, [quill, socket]);
