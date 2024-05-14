@@ -8,7 +8,7 @@ import EditDocument from "../pages/EditDocument";
 const routes = {
   "/login": () => <Login />,
   "/signup": () => <Signup />,
-  "/": () => <Home />,
+  "/": () => <AllFiles />,
   "/all": () => <AllFiles />,
   "edit/:fileId/:userId": () => <EditDocument />,
 };

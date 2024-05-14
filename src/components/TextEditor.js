@@ -7,8 +7,8 @@ import axios from "axios";
 import io from "socket.io-client";
 import { v4 as uuidv4 } from "uuid";
 import operationalTransform from "../utils/operationalTranform";
-
 import QuillCursors from "quill-cursors";
+import  getRandomHexColor  from "../utils/getRandomHexColor";
 Quill.register("modules/cursors", QuillCursors);
 
 const SAVE_INTERVAL_MS = 5000;
@@ -38,7 +38,6 @@ export default function TextEditor(props) {
   const [content, setContent] = useState("");
   const [quill, setQuill] = useState(null);
   const role = props.role;
-
   useEffect(() => {
     console.log("inner role ", role);
     const s = io("http://localhost:3001");
@@ -51,9 +50,6 @@ export default function TextEditor(props) {
 
   useEffect(() => {
     if (socket == null || quill == null) return;
-    const cursorManager = quill.getModule("cursors");
-
-    cursorManager.createCursor("cursor-id", "User Name", "red");
 
     socket.once("load-document", (document, serverVersion) => {
       quill.setContents(document);
@@ -101,27 +97,9 @@ export default function TextEditor(props) {
       clientVersion = tempV;
     };
     socket.on("receive-changes", handler);
-    socket.on("receive-cursor", (range) => {
-      const cursorManager = quill.getModule("cursors");
-      cursorManager.setCursor(
-        "cursor-id",
-        range.index,
-        range.length,
-        "User Name"
-      );
-    });
 
     return () => {
       socket.off("receive-changes", handler);
-      socket.off("receive-cursor", (range) => {
-        const cursorManager = quill.getModule("cursors");
-        cursorManager.setCursor(
-          "cursor-id",
-          range.index,
-          range.length,
-          "User Name"
-        );
-      });
     };
   }, [socket, quill]);
 
@@ -139,19 +117,9 @@ export default function TextEditor(props) {
       clientVersion++;
     };
     quill.on("text-change", handler);
-    quill.on("selection-change", (range, oldRange, source) => {
-      if (source === "user") {
-        socket.emit("send-cursor", range);
-      }
-    });
 
     return () => {
       quill.off("text-change", handler);
-      quill.off("selection-change", (range, oldRange, source) => {
-        if (source === "user") {
-          socket.emit("send-cursor", range);
-        }
-      });
     };
   }, [socket, quill]);
 
@@ -182,6 +150,47 @@ export default function TextEditor(props) {
     socket.on("acknowledge", handler);
   }, [quill, socket]);
 
+  useEffect(() => {
+    if (socket == null || quill == null) return;
+
+    const handleCursorChange = (cursor) => {
+      console.log("I am in cursor change", cursor);
+      quill.getModule("cursors").removeCursor(cursor.id);
+      quill
+        .getModule("cursors")
+        .createCursor(cursor.id, cursor.name, cursor.color);
+
+        quill.getModule("cursors").moveCursor(cursor.id, cursor.range);
+      
+    };
+
+    socket.on("cursor-change", handleCursorChange);
+
+    return () => {
+      socket.off("cursor-change", handleCursorChange);
+    };
+  }, [socket, quill]);
+
+  useEffect(() => {
+    if (socket == null || quill == null) return;
+
+    quill.on("selection-change", (range, oldRange, source) => {
+      if (range) {
+        const cursor = {
+          id: userId,
+          name: localStorage.getItem("username"), // Provide the user's name
+          color: getRandomHexColor(userId), // Set the cursor color
+          range: range,
+        };
+        socket.emit("cursor-change", cursor);
+      }
+    });
+
+    return () => {
+      quill.off("selection-change");
+    };
+  }, [socket, quill]);
+
   const wrapperRef = useCallback((wrapper) => {
     if (wrapper == null) return;
 
@@ -193,8 +202,9 @@ export default function TextEditor(props) {
       theme: "snow",
       modules: { toolbar: TOOLBAR_OPTIONS, cursors: true },
     });
+    Quill.register('modules/cursors', QuillCursors);
     q.disable();
-    // q.setText("Awaiting document to load...");
+    q.setText("Awaiting document to load...");
     setQuill(q);
   }, []);
   return <div className="container" ref={wrapperRef}></div>;

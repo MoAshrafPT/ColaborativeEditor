@@ -162,7 +162,7 @@ export default function AllFiles() {
       <Navbar setSearchQuery={setSearchQuery} />
       <Container>
         <Typography variant="h3" textAlign="center" marginTop="20px">
-          Welcome to AFOTE!
+          Welcome {localStorage.getItem("username")}
         </Typography>
         <Typography variant="h6" textAlign="center" marginTop="20px">
           Here are your recent documents
