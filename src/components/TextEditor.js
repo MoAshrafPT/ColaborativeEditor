@@ -138,7 +138,7 @@ export default function TextEditor(props) {
 
     const handler = (acknowledgeID, tempV) => {
       console.log("I am in acknowledge");
-      operationQueue.slice(1);
+      operationQueue = operationQueue.slice(1);
       clientVersion = tempV;
       if (operationQueue.length > 0) {
         console.log("I am in acknowledge if");
