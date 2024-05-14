@@ -11,7 +11,7 @@ import QuillCursors from "quill-cursors";
 import  getRandomHexColor  from "../utils/getRandomHexColor";
 Quill.register("modules/cursors", QuillCursors);
 
-const SAVE_INTERVAL_MS = 5000;
+const SAVE_INTERVAL_MS = 2000;
 
 const TOOLBAR_OPTIONS = [
   [{ header: [1, 2, 3, 4, 5, false] }],
@@ -82,8 +82,7 @@ export default function TextEditor(props) {
 
       if (operationQueue[0] && acknowledgeID === operationQueue[0].uuid) {
         console.log("I am in the if statement");
-        // setOperationQueue((prev) => prev.slice(1));
-        operationQueue = operationQueue.slice(1);
+        return;
       } else {
         if (operationQueue.length !== 0) {
           console.log("I am in the else statement");
@@ -114,7 +113,7 @@ export default function TextEditor(props) {
       console.log(operationQueue, "operationQueue in sending");
       console.log("clientVersion", clientVersion);
       socket.emit("send-changes", delta, clientVersion, operation.uuid);
-      clientVersion++;
+      //clientVersion++;
     };
     quill.on("text-change", handler);
 
@@ -143,9 +142,10 @@ export default function TextEditor(props) {
         console.log("I am in the if statement");
         operationQueue = operationQueue.slice(1);
         console.log(operationQueue, "operationQueue");
+        
       }
       console.log(tempV, "version from acknowledge");
-      //clientVersion = tempV;
+      clientVersion = tempV;
     };
     socket.on("acknowledge", handler);
   }, [quill, socket]);
