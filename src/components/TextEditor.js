@@ -147,25 +147,6 @@ export default function TextEditor(props) {
     }
   }, [props.role, socket, quill]);
 
-  // useEffect(() => {
-  //   if (socket == null || quill == null) return;
-
-  //   const handler = (acknowledgeID, tempV) => {
-  //     console.log("I am in acknowledge");
-  //     operationQueue = operationQueue.slice(1);
-  //     clientVersion = tempV;
-  //     if (operationQueue.length > 0) {
-  //       console.log("I am in acknowledge if");
-
-  //       socket.emit("send-changes", operationQueue[0].delta, clientVersion, operationQueue[0].uuid);
-  //     }
-  //     else{
-  //       ack = true;
-  //     }
-  //   };
-  //   socket.on("acknowledge", handler);
-  // }, [quill, socket]);
-
   useEffect(() => {
     if (socket == null || quill == null) return;
 
