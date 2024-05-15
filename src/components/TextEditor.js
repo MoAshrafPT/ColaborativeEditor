@@ -56,7 +56,7 @@ export default function TextEditor(props) {
 
     socket.once("load-document", (document, serverVersion) => {
       quill.setContents(document);
-      clientVersion = serverVersion;
+      clientVersion = serverVersion+1;
       //quill.enable();
     });
 
