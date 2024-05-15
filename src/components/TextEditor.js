@@ -115,7 +115,7 @@ export default function TextEditor(props) {
   }, [socket, quill]);
 
   function operationalTransform2(delta, operations) {
-    console.log(delta, "delta in OT start");
+    console.log(delta, "delta in OT start new_func");
     if (delta.ops[0] && !('retain' in delta.ops[0])) {
       delta.ops.unshift({ retain: 0 });
     }
