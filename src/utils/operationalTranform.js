@@ -7,24 +7,30 @@ export default function operationalTransform(delta, operations) {
     if (operations[i].delta.ops[0] && !('retain' in operations[i].delta.ops[0])) {
       operations[i].delta.ops.unshift({ retain: 0 });
     }
+    console.log("delta @ ", i, delta);
+    console.log("ops delta @ ", i, operations[i].delta);
     if ('insert' in delta.ops[1]) {
       if ('insert' in operations[i].delta.ops[1]) {
         if (delta.ops[0].retain >= operations[i].delta.ops[0].retain) {
+          console.log("I am insert insert", i);
           delta.ops[0].retain += operations[i].delta.ops[1].insert.length;
         }
       } else if ('delete' in operations[i].delta.ops[1]) {
         if (delta.ops[0].retain >= operations[i].delta.ops[0].retain) {
           delta.ops[0].retain -= operations[i].delta.ops[1].delete;
+          console.log("I am insert delete");
         }
       }
     } else if ('delete' in delta.ops[1]) {
       if ('insert' in operations[i].delta.ops[1]) {
         if (delta.ops[0].retain >= operations[i].delta.ops[0].retain) {
           delta.ops[0].retain += operations[i].delta.ops[1].insert.length;
+          console.log("I am delete insert");
         }
       } else if ('delete' in operations[i].delta.ops[1]) {
         if (delta.ops[0].retain >= operations[i].delta.ops[0].retain) {
           delta.ops[0].retain -= operations[i].delta.ops[1].delete;
+          console.log("I am delete delete");
         }
       }
     }
