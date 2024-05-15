@@ -13,7 +13,9 @@ export default function operationalTransform(delta, operations) {
       if ('insert' in operations[i].delta.ops[1]) {
         if (delta.ops[0].retain >= operations[i].delta.ops[0].retain) {
           console.log("I am insert insert", i);
+          console.log("data insert insert", operations[i].delta.ops[1].insert.length);
           delta.ops[0].retain += operations[i].delta.ops[1].insert.length;
+          console.log("data 2 insert insert", delta.ops[0].retain);
         }
       } else if ('delete' in operations[i].delta.ops[1]) {
         if (delta.ops[0].retain >= operations[i].delta.ops[0].retain) {
