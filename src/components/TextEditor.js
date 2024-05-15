@@ -82,7 +82,7 @@ export default function TextEditor(props) {
     const handler = async (delta, tempV, acknowledgeID) => {
 
       await lock.acquire(fileId, async () => {
-        if (operationQueue.length>0 && acknowledgeID === operationQueue[0].uuid) {
+        if (operationQueue.length > 0 && acknowledgeID === operationQueue[0].uuid) {
           console.log("I am in acknowledge");
           operationQueue = operationQueue.slice(1);
           clientVersion = tempV;
