@@ -20,7 +20,7 @@ export default function operationalTransform(delta, operations) {
       } else if ('delete' in delta.ops[1]) {
         if ('insert' in operations[i].delta.ops[1]) {
           if (delta.ops[0].retain >= operations[i].delta.ops[0].retain) {
-            delta.ops[0].retain += operations[i].delta.ops[1].insert.length ;
+            delta.ops[0].retain += operations[i].delta.ops[1].insert.length;
           }
         } else if ('delete' in operations[i].delta.ops[1]) {
           if (delta.ops[0].retain >= operations[i].delta.ops[0].retain) {

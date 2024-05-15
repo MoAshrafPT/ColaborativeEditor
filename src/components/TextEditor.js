@@ -8,7 +8,8 @@ import io from "socket.io-client";
 import { v4 as uuidv4 } from "uuid";
 import operationalTransform from "../utils/operationalTranform";
 import QuillCursors from "quill-cursors";
-import  getRandomHexColor  from "../utils/getRandomHexColor";
+import getRandomHexColor from "../utils/getRandomHexColor";
+import AsyncLock from "async-lock";
 Quill.register("modules/cursors", QuillCursors);
 
 const SAVE_INTERVAL_MS = 2000;
@@ -38,6 +39,7 @@ export default function TextEditor(props) {
   const [content, setContent] = useState("");
   const [quill, setQuill] = useState(null);
   const role = props.role;
+  const lock = new AsyncLock();
   let ack = true;
   useEffect(() => {
     console.log("inner role ", role);
@@ -77,20 +79,34 @@ export default function TextEditor(props) {
   useEffect(() => {
     if (socket == null || quill == null) return;
 
-    const handler = (delta, tempV, acknowledgeID) => {
+    const handler = async (delta, tempV, acknowledgeID) => {
+
+      await lock.acquire(fileId, async () => {
+        if (acknowledgeID === operationQueue[0].uuid) {
+          console.log("I am in acknowledge");
+          operationQueue = operationQueue.slice(1);
+          clientVersion = tempV;
+          if (operationQueue.length > 0) {
+            console.log("I am in acknowledge if");
+
+            socket.emit("send-changes", operationQueue[0].delta, clientVersion, operationQueue[0].uuid);
+          }
+          else {
+            ack = true;
+          }
+          return;
+        }
         if (operationQueue.length !== 0) {
           console.log("I am in the else statement");
           delta = operationalTransform(delta, operationQueue);
         }
-        else{
+        else {
           clientVersion = tempV;
         }
-
         quill.updateContents(delta);
         console.log(delta, "delta from receiving");
         console.log(quill.contents, "quill contents")
-      
-      
+      });
     };
     socket.on("receive-changes", handler);
 
@@ -104,16 +120,15 @@ export default function TextEditor(props) {
 
     const handler = (delta, oldDelta, source) => {
       if (source !== "user") return;
-     
+
       const operation = { delta, uuid: uuidv4() };
       operationQueue.push(operation);
-     
-     if(ack === true)
-      {
-         ack = false;
-         socket.emit("send-changes", operationQueue[0].delta, clientVersion, operationQueue[0].uuid);
-      } 
-     
+
+      if (ack === true) {
+        ack = false;
+        socket.emit("send-changes", operationQueue[0].delta, clientVersion, operationQueue[0].uuid);
+      }
+
     };
     quill.on("text-change", handler);
 
@@ -133,24 +148,24 @@ export default function TextEditor(props) {
     }
   }, [props.role, socket, quill]);
 
-  useEffect(() => {
-    if (socket == null || quill == null) return;
+  // useEffect(() => {
+  //   if (socket == null || quill == null) return;
 
-    const handler = (acknowledgeID, tempV) => {
-      console.log("I am in acknowledge");
-      operationQueue = operationQueue.slice(1);
-      clientVersion = tempV;
-      if (operationQueue.length > 0) {
-        console.log("I am in acknowledge if");
-       
-        socket.emit("send-changes", operationQueue[0].delta, clientVersion, operationQueue[0].uuid);
-      }
-      else{
-        ack = true;
-      }
-    };
-    socket.on("acknowledge", handler);
-  }, [quill, socket]);
+  //   const handler = (acknowledgeID, tempV) => {
+  //     console.log("I am in acknowledge");
+  //     operationQueue = operationQueue.slice(1);
+  //     clientVersion = tempV;
+  //     if (operationQueue.length > 0) {
+  //       console.log("I am in acknowledge if");
+
+  //       socket.emit("send-changes", operationQueue[0].delta, clientVersion, operationQueue[0].uuid);
+  //     }
+  //     else{
+  //       ack = true;
+  //     }
+  //   };
+  //   socket.on("acknowledge", handler);
+  // }, [quill, socket]);
 
   useEffect(() => {
     if (socket == null || quill == null) return;
@@ -162,8 +177,8 @@ export default function TextEditor(props) {
         .getModule("cursors")
         .createCursor(cursor.id, cursor.name, cursor.color);
 
-        quill.getModule("cursors").moveCursor(cursor.id, cursor.range);
-      
+      quill.getModule("cursors").moveCursor(cursor.id, cursor.range);
+
     };
 
     socket.on("cursor-change", handleCursorChange);
