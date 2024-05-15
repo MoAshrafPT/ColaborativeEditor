@@ -16,7 +16,7 @@ export default function operationalTransform(delta, operations) {
           console.log("data insert insert", operations[i].delta.ops[1].insert.length);
           Object.assign(delta.ops[0].retain, delta.ops[0].retain + operations[i].delta.ops[1].insert.length);
           //delta.ops[0].retain += operations[i].delta.ops[1].insert.length;
-          console.log(operations);
+          console.log(operations[i].delta.ops[1].insert.length, "operations[i].delta.ops[1].insert.length")
           console.log("data 2 insert insert", delta.ops[0].retain);
         }
       } else if ('delete' in operations[i].delta.ops[1]) {
