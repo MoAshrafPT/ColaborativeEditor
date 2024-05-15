@@ -43,7 +43,7 @@ export default function TextEditor(props) {
   let ack = true;
   useEffect(() => {
     console.log("inner role ", role);
-    const s = io("http://localhost:3001");
+    const s = io("http://172.20.10.11:3001");
     setSocket(s);
 
     return () => {
@@ -56,7 +56,7 @@ export default function TextEditor(props) {
 
     socket.once("load-document", (document, serverVersion) => {
       quill.setContents(document);
-      clientVersion = serverVersion+1;
+      clientVersion = serverVersion;
       //quill.enable();
     });
 
